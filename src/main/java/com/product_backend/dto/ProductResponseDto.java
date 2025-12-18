@@ -1,15 +1,10 @@
-package com.product_backend.entity;
+package com.product_backend.dto;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
-@Entity
 @Data
-public class Product {
-
-    @Id
-    private String id;
-
+public class ProductResponseDto {
+    private String _id;
     private String name;
     private double price;
     private double originalPrice;
@@ -19,8 +14,5 @@ public class Product {
     private String category;
     private Boolean sale;
     private String badge;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
-    private Seller seller;
+    private String sellerId;
 }

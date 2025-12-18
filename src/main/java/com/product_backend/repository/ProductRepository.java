@@ -5,13 +5,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, String> {
 
-    Page<Product> findBySellerUsername(String username, Pageable pageable);
+    Page<Product> findBySeller_Handle(
+            String handle,
+            Pageable pageable
+    );
 
-    Page<Product> findBySellerUsernameAndCategoryName(
-            String username,
+    Page<Product> findBySeller_HandleAndCategory(
+            String handle,
             String category,
             Pageable pageable
     );
 }
+
+

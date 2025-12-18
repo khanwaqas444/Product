@@ -9,5 +9,4 @@ public class ContactDto {
     private String phone;
     private String whatsapp;
     private String email;
-    private String address;
 }

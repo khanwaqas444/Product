@@ -1,32 +1,44 @@
 package com.product_backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "seller")
 public class Seller {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(length = 36)
+    private String id;
 
     private String name;
-    private String username;
-    private String bio;
+    private String handle;
+    private String description;
+    private String avatarUrl;
     private String location;
-    private Double rating;
-    private Integer totalReviews;
-    private Boolean freeShipping;
-    private String profileImage;
 
-    private String phone;
-    private String whatsapp;
-    private String email;
-    private String address;
+    private Double overallRating;
+    private Integer reviewCount;
+
+    private Boolean freeShipping;
+    private Boolean verified;
+    private Boolean onlineStatus;
+
+    // ================= CONTACT =================
+    @OneToOne(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Contact contact;
+
+    // ================= SOCIAL LINKS =================
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SocialLink> socialLinks;
 }

@@ -3,9 +3,7 @@ package com.product_backend.controller;
 import com.product_backend.entity.Category;
 import com.product_backend.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,10 +12,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryRepository repo;
+
+    @PostMapping
+    public Category create(@RequestBody Category c) {
+        return repo.save(c);
+    }
 
     @GetMapping
     public List<Category> getAll() {
-        return categoryRepository.findAll();
+        return repo.findAll();
     }
 }
+
