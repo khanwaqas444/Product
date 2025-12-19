@@ -3,7 +3,9 @@ package com.product_backend.controller;
 import com.product_backend.dto.ContactDto;
 import com.product_backend.dto.SellerResponseDto;
 import com.product_backend.dto.SocialLinkDto;
+import com.product_backend.entity.Contact;
 import com.product_backend.entity.Seller;
+import com.product_backend.entity.SocialLink;
 import com.product_backend.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,42 +20,19 @@ public class SellerController {
 
     private final SellerService service;
 
-    // ================= CREATE (FORM-DATA) =================
+    // ================= CREATE SELLER =================
     @PostMapping(consumes = "multipart/form-data")
     public SellerResponseDto create(
-            @RequestParam String name,
-            @RequestParam String handle,
-            @RequestParam String description,
-            @RequestParam String location,
-            @RequestParam double overallRating,
-            @RequestParam int reviewCount,
-            @RequestParam boolean freeShipping,
-            @RequestParam boolean verified,
-            @RequestParam boolean onlineStatus,
-
-            // 🔥 FILE PARAMETER (MANDATORY FOR FORM-DATA)
+            @ModelAttribute Seller seller,
             @RequestParam(required = false) MultipartFile avatar
     ) {
-        Seller s = new Seller();
-        s.setName(name);
-        s.setHandle(handle);
-        s.setDescription(description);
-        s.setLocation(location);
-        s.setOverallRating(overallRating);
-        s.setReviewCount(reviewCount);
-        s.setFreeShipping(freeShipping);
-        s.setVerified(verified);
-        s.setOnlineStatus(onlineStatus);
-
         if (avatar != null && !avatar.isEmpty()) {
-            s.setAvatarUrl("/uploads/" + avatar.getOriginalFilename());
+            seller.setAvatarUrl("/uploads/" + avatar.getOriginalFilename());
         }
-
-        return map(service.create(s));
+        return map(service.create(seller));
     }
 
-
-    // ================= UPDATE (FORM-DATA) =================
+    // ================= UPDATE SELLER =================
     @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     public SellerResponseDto update(
             @PathVariable String id,
@@ -61,6 +40,23 @@ public class SellerController {
     ) {
         return map(service.update(id, seller));
     }
+
+    // ================= UPDATE SOCIAL LINKS =================
+    @PutMapping(value = "/{id}/contact", consumes = "multipart/form-data")
+    public SellerResponseDto updateContact(
+            @PathVariable String id,
+            @RequestParam String phone,
+            @RequestParam String whatsapp,
+            @RequestParam String email
+    ) {
+        Contact c = new Contact();
+        c.setPhone(phone);
+        c.setWhatsapp(whatsapp);
+        c.setEmail(email);
+
+        return map(service.updateContact(id, c));
+    }
+
 
     // ================= GET =================
     @GetMapping("/{handle}")
@@ -80,9 +76,9 @@ public class SellerController {
         dto.setLocation(s.getLocation());
         dto.setOverallRating(s.getOverallRating());
         dto.setReviewCount(s.getReviewCount());
-        dto.setFreeShipping(s.getFreeShipping());
-        dto.setVerified(s.getVerified());
-        dto.setOnlineStatus(s.getOnlineStatus());
+        dto.setFreeShipping(s.isFreeShipping());
+        dto.setVerified(s.isVerified());
+        dto.setOnlineStatus(s.isOnlineStatus());
 
         if (s.getContact() != null) {
             ContactDto c = new ContactDto();
@@ -103,5 +99,3 @@ public class SellerController {
         return dto;
     }
 }
-
-
